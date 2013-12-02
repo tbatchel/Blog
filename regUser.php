@@ -13,6 +13,7 @@ else
 }	
 
 $error = ''; // error message holder
+$username = ''; // username holder
 $email = '';  // email holder
 $name = ''; // name holder
 
@@ -24,15 +25,20 @@ if (isset($_POST['signup']))
 	// retrieve data from form post
 	$signup = $_POST['signup'];
 	$username = $_POST['username'];
-	$password = $_POST['password'];
+	$password1 = $_POST['password1'];
+	$password2 = $_POST['password2'];
 	$email = $_POST['email'];
 	$name = $_POST['name'];
 
-	if (isset($signup) && !empty($username) && !empty($password) && !empty($email) && !empty($name)) // only act if data is valid
+	if ($password1 != $password2)
+	{
+		$error = "Passwords do not match.<br>\n";
+	}
+	else if (isset($signup) && !empty($username) && !empty($password1) && !empty($password2) && !empty($email) && !empty($name)) // only act if data is valid
 	{
 		$mysqli = connect(); // connect to the database server
 		$username = $mysqli->escape_string($username); // escape MySQL characters in the string
-		$password = md5($mysqli->escape_string($password)); // escape MySQL characters in the string and encrypt the result with the MD5 method
+		$password = md5($mysqli->escape_string($password1)); // escape MySQL characters in the string and encrypt the result with the MD5 method
 		$email = $mysqli->escape_string($email); // escape MySQL characters in the string
 		$name = $mysqli->escape_string($name); // escape MySQL characters in the string
 
@@ -89,7 +95,11 @@ if (isset($_POST['signup']))
 			</tr>
 			<tr>
 				<td>Password:</td>
-				<td><input type="password" name="password"></td>
+				<td><input type="password" name="password1"></td>
+			</tr>
+			<tr>
+				<td>Verify password:</td>
+				<td><input type="password" name="password2"></td>
 			</tr>
 			<tr>
 				<td>Email address:</td>
